@@ -1,0 +1,2 @@
+# practice-cloudrun
+CloudRun deploy
