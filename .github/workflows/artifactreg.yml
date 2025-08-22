@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.x'
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
@@ -25,17 +28,8 @@ jobs:
           workload_identity_provider: 'projects/${{ secrets.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.POOL_ID }}/providers/${{ secrets.PROVIDER_ID }}'
           service_account: '${{ secrets.SERVICE_ACCOUNT_EMAIL }}'
 
-      - name: Login to DockerHub
-        id: docker-auth
-        if: github.event_name != 'pull_request'
-        uses: 'docker/login-action@v3'
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          registry: '${{ env.AR_REPO_LOCATION }}-docker.pkg.dev'
-
-      - name: Build and Push Container
-        run: |-
-          docker build -t "${{ env.ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" ./
-          docker push "${{ secrets.ARTIFACT_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+      - id: 'ko'
+        name: 'Build image with ko '
+        uses: 'ko-build/setup-ko@v0.8'
+      - run: ko build
 
