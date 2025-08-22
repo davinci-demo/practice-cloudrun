@@ -6,6 +6,7 @@ on:
 env:
   IMAGE_NAME: 'practice-cloudrun'
   AR_REPO_LOCATION: 'us-central1'
+  RELEASE_VERSION: 'v0.1.1'
 
 jobs:
   push_to_registry:
@@ -31,8 +32,14 @@ jobs:
       - id: 'ko'
         name: 'Build image with ko '
         uses: 'ko-build/setup-ko@v0.8'
-      - name: Login with ko
+      - name: 'Login with ko'
         run: |
           ko login gcr.io --username=oauth2accesstoken --password=${{ steps.auth.outputs.access_token }}
+      - name: 'Publish image'
+        run: |
+          ko build . --bare --tags ${{ env.RELEASE_VERSION }},latest
+        env:
+          KO_DOCKER_REPO: gcr.io/${{ secrets.PROJECT_ID }}/practice-cloudrun
+
 
 
