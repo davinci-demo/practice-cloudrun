@@ -1,0 +1,3 @@
+
+DROP VIEW IF EXISTS lessons_v;
+DROP TABLE IF EXISTS lessons;

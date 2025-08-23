@@ -40,8 +40,6 @@ func main() {
 	StartServer(app)
 }
 
-
-
 // FiberConfig func for configuration Fiber app.
 // See: https://docs.gofiber.io/api/fiber#config
 func FiberConfig() fiber.Config {

@@ -1,0 +1,3 @@
+
+DROP VIEW IF EXISTS courses_v;
+DROP TABLE IF EXISTS courses;

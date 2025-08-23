@@ -34,18 +34,18 @@ func GetCourses(c *fiber.Ctx) error {
 	if err != nil {
 		// Return, if courses not found.
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": true,
-			"msg":   "courses were not found",
-			"count": 0,
+			"error":   true,
+			"msg":     "courses were not found",
+			"count":   0,
 			"courses": nil,
 		})
 	}
 
 	// Return status 200 OK.
 	return c.JSON(fiber.Map{
-		"error": false,
-		"msg":   nil,
-		"count": len(courses),
+		"error":   false,
+		"msg":     nil,
+		"count":   len(courses),
 		"courses": courses,
 	})
 }
@@ -84,17 +84,17 @@ func GetCourse(c *fiber.Ctx) error {
 	if err != nil {
 		// Return, if course not found.
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": true,
-			"msg":   "course with the given ID is not found",
-			"course":  nil,
+			"error":  true,
+			"msg":    "course with the given ID is not found",
+			"course": nil,
 		})
 	}
 
 	// Return status 200 OK.
 	return c.JSON(fiber.Map{
-		"error": false,
-		"msg":   nil,
-		"course":  course,
+		"error":  false,
+		"msg":    nil,
+		"course": course,
 	})
 }
 
@@ -159,7 +159,6 @@ func CreateCourse(c *fiber.Ctx) error {
 	// Create a new validator for a Course model.
 	validate := NewValidator()
 
-
 	// Set initialized default data for course:
 	course.ID = uuid.New()
 	course.Created = time.Now()
@@ -174,7 +173,6 @@ func CreateCourse(c *fiber.Ctx) error {
 		})
 	}
 
-
 	if err := db.CreateCourse(course); err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -185,9 +183,9 @@ func CreateCourse(c *fiber.Ctx) error {
 
 	// Return status 200 OK.
 	return c.JSON(fiber.Map{
-		"error": false,
-		"msg":   nil,
-		"course":  course,
+		"error":  false,
+		"msg":    nil,
+		"course": course,
 	})
 }
 

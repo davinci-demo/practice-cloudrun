@@ -32,4 +32,3 @@ func OpenDBConnection111() (*Queries, error) {
 		CourseQueries: &queries.CourseQueries{DB: db}, // from Course model
 	}, nil
 }
-

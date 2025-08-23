@@ -3,7 +3,6 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"opendavinci/controllers"
-
 )
 
 // PrivateRoutes func for describe group of private routes.

@@ -1,0 +1,3 @@
+
+DROP VIEW IF EXISTS users_v;
+DROP TABLE IF EXISTS users;
