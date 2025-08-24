@@ -55,7 +55,7 @@ func (q *CourseQueries) CreateCourse(b *models.Course) error {
 	query := `INSERT INTO courses (rawdata) VALUES ($1)`
 
 	// Send query to database.
-	_, err := q.Exec(query, b.CourseAttrs)
+	_, err := q.Exec(query, b.CourseID)
 	if err != nil {
 		// Return only error.
 		return err
@@ -71,7 +71,7 @@ func (q *CourseQueries) UpdateCourse(id uuid.UUID, b *models.Course) error {
 	query := `UPDATE courses SET rawdata = $2 WHERE id = $1`
 
 	// Send query to database.
-	_, err := q.Exec(query, id, b.CourseAttrs)
+	_, err := q.Exec(query, id, b.CourseID)
 	if err != nil {
 		// Return only error.
 		return err

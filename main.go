@@ -3,13 +3,14 @@ package main
 import (
 	"log"
 	"os"
-	"os/signal"
 	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 
-	"opendavinci/routes"
+	////"opendavinci/routes"
+	"opendavinci/database"
+	"opendavinci/models"
 )
 
 // @title API
@@ -25,64 +26,43 @@ import (
 // @name Authorization
 // @BasePath /api
 func main() {
-	config := FiberConfig()
+	app := fiber.New(fiberConf())
 
-	// Define a new Fiber app with config.
-	app := fiber.New(config)
+	app.Get("/api/courses", func(c *fiber.Ctx) error {
+		db, err := database.OpenDBConnection()
+		if err != nil {
+			// Return status 500 and database connection error.
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": true,
+				"msg":   err.Error(),
+			})
+		}
 
-	routes.FiberMiddleware(app)
+		courses := []models.Course{}
+		query := `SELECT * FROM courses_v`
+		err = db.Select(&courses, query)
+		if err != nil {
+			// Return status 500 and database connection error.
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": true,
+				"msg":   err.Error(),
+			})
+		}
 
-	// Routes.
-	routes.PublicRoutes(app)  // Register a public routes for app.
-	routes.PrivateRoutes(app) // Register a private routes for app.
-	routes.NotFoundRoute(app) // Register route for 404 Error.
+		return c.JSON(courses)
+	})
 
-	StartServer(app)
+	if err := app.Listen(os.Getenv("SERVER_URL")); err != nil {
+		log.Printf("Server failure: %v", err)
+	}
 }
 
-// FiberConfig func for configuration Fiber app.
-// See: https://docs.gofiber.io/api/fiber#config
-func FiberConfig() fiber.Config {
+func fiberConf() fiber.Config {
 	// Define server settings.
 	readTimeoutSecondsCount, _ := strconv.Atoi(os.Getenv("SERVER_READ_TIMEOUT"))
 
 	// Return Fiber configuration.
 	return fiber.Config{
 		ReadTimeout: time.Second * time.Duration(readTimeoutSecondsCount),
-	}
-}
-
-// StartServerWithGracefulShutdown function for starting server with a graceful shutdown.
-func StartServerWithGracefulShutdown(a *fiber.App) {
-	// Create channel for idle connections.
-	idleConnsClosed := make(chan struct{})
-
-	go func() {
-		sigint := make(chan os.Signal, 1)
-		signal.Notify(sigint, os.Interrupt) // Catch OS signals.
-		<-sigint
-
-		// Received an interrupt signal, shutdown.
-		if err := a.Shutdown(); err != nil {
-			// Error from closing listeners, or context timeout:
-			log.Printf("Oops... Server is not shutting down! Reason: %v", err)
-		}
-
-		close(idleConnsClosed)
-	}()
-
-	// Run server.
-	if err := a.Listen(os.Getenv("SERVER_URL")); err != nil {
-		log.Printf("Oops... Server is not running! Reason: %v", err)
-	}
-
-	<-idleConnsClosed
-}
-
-// StartServer func for starting a simple server.
-func StartServer(a *fiber.App) {
-	// Run server.
-	if err := a.Listen(os.Getenv("SERVER_URL")); err != nil {
-		log.Printf("Oops... Server is not running! Reason: %v", err)
 	}
 }
