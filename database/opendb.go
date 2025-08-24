@@ -20,6 +20,8 @@ func OpenDBConnection() (*Queries, error) {
 		CourseQueries: &queries.CourseQueries{DB: db}, // from Course model
 	}, nil
 }
+
+/**************************************
 func OpenDBConnection111() (*Queries, error) {
 	// Define a new SQLite connection.
 	db, err := SqliteConnection()
@@ -32,3 +34,4 @@ func OpenDBConnection111() (*Queries, error) {
 		CourseQueries: &queries.CourseQueries{DB: db}, // from Course model
 	}, nil
 }
+**************************************/

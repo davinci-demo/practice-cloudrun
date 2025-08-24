@@ -6,7 +6,7 @@ on:
 env:
   IMAGE_NAME: 'practice-cloudrun'
   AR_REPO_LOCATION: 'us-central1'
-  RELEASE_VERSION: 'v0.1.2'
+  RELEASE_VERSION: 'v0.1.4'
 
 jobs:
   push_to_registry:
