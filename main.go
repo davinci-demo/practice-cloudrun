@@ -12,6 +12,10 @@ import (
 	"opendavinci/database"
 	"opendavinci/models"
 )
+import _ "embed"
+
+//go:embed openapi.json
+var oasJSON string
 
 // @title API
 // @version 1.0
@@ -50,6 +54,9 @@ func main() {
 		}
 
 		return c.JSON(courses)
+	})
+	app.Get("/docs", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).SendString(oasJSON)
 	})
 
 	if err := app.Listen(os.Getenv("SERVER_URL")); err != nil {
