@@ -58,6 +58,11 @@ func main() {
 	app.Get("/docs", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).SendString(oasJSON)
 	})
+	app.Get("/echo", func(c *fiber.Ctx) error {
+		// show headers to help debug cf app token
+		dump := c.GetReqHeaders()
+		return c.Status(fiber.StatusOK).JSON(dump)
+	})
 
 	if err := app.Listen(os.Getenv("SERVER_URL")); err != nil {
 		log.Printf("Server failure: %v", err)
