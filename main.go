@@ -58,7 +58,7 @@ func main() {
 	app.Get("/docs", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).SendString(oasJSON)
 	})
-	app.Get("/echo", func(c *fiber.Ctx) error {
+	app.Get("/api/lessons", func(c *fiber.Ctx) error {
 		// show headers to help debug cf app token
 		dump := c.GetReqHeaders()
 		return c.Status(fiber.StatusOK).JSON(dump)
