@@ -55,6 +55,30 @@ func main() {
 
 		return c.JSON(courses)
 	})
+	app.Post("/api/courses", func(c *fiber.Ctx) error {
+		db, err := database.OpenDBConnection()
+		if err != nil {
+			// Return status 500 and database connection error.
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": true,
+				"msg":   err.Error(),
+			})
+		}
+		// todo sanitize
+		js := c.Body()
+
+		stmt := `INSERT INTO courses (rawdata) VALUES ($1) RETURNING *`
+		ds, err := db.Exec(stmt, string(js))
+		if err != nil {
+			// Return status 500 and database connection error.
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": true,
+				"msg":   err.Error(),
+			})
+		}
+
+		return c.JSON(ds)
+	})
 	app.Get("/docs", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).SendString(oasJSON)
 	})

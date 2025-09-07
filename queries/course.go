@@ -49,13 +49,11 @@ func (q *CourseQueries) GetCourse(id uuid.UUID) (models.Course, error) {
 	return course, nil
 }
 
-// CreateCourse method for creating course by given Course object.
-func (q *CourseQueries) CreateCourse(b *models.Course) error {
-	// Define query string.
+// CreateCourse method for creating course by given json.
+func (q *CourseQueries) CreateCourse(js string) error {
 	query := `INSERT INTO courses (rawdata) VALUES ($1)`
 
-	// Send query to database.
-	_, err := q.Exec(query, b.CourseID)
+	_, err := q.Exec(query, js)
 	if err != nil {
 		// Return only error.
 		return err
